@@ -7,8 +7,13 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 
 const App = () => {
   
-  const url = "https://rickandmortyapi.com/api/character/?page=";
+  const url = "https://rickandmortyapi.com/api/character/";
+  
   const [contador, setContador] = useState(1);
+  const [nombre, setNombre] = useState("");
+
+
+  const [query, setQuery] = useState(url + "?page=" + contador.toString());
 
   function cambioPagina(){
     if(contador < 42){
@@ -22,21 +27,48 @@ const App = () => {
     }
   }
 
+  const onChange = (e) => {
+    setNombre(e.target.value);
+  };
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    setQuery(url + "?name=" + nombre);
+  };
+
+  useEffect(() => {
+    setQuery(url + "?page=" + contador.toString());
+  }, [contador]);
+
+
   useEffect(() => {
     
-  }, [contador]);
+  }, [query]);
 
   return(
     <>
     <div>
       <h1 className='text-info py-4'>RICK Y MORTY</h1>
+      <form action="" onSubmit={onSubmit}>
+        <div>
+          <input
+              type="text"
+              name="nombre"
+              id="nombre"
+              value={nombre}
+              onChange={onChange}>
+          </input>
+          <button>Buscar</button>
+        </div>
+      </form>
+      
 
       {contador > 1 ? (
         <button
           onClick={cambioPagina2}
           disabled = {contador === 1}
           id="btn__prev"
-          class="bg-yellow-200 hover:bg-yellow-500 text-brown-300 font-bold py-2 px-4 rounded-4"
+          class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l"
           
         >
           Prev
@@ -49,7 +81,7 @@ const App = () => {
           onClick={cambioPagina}
           disabled = {contador === 42}
           id="btn__next"
-          class="btn btn-primary"
+          class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r"
           
         >
           Next
@@ -58,7 +90,7 @@ const App = () => {
         <></>
       )}
 
-      <Personajes url={url+contador.toString()}/>
+      <Personajes url={query}/>
     </div>
     </>
   );
