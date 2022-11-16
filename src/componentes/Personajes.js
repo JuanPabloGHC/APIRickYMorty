@@ -5,12 +5,11 @@ import Personaje from './Personaje';
 const Personajes = (props) => {
 
     const [personajes, setPersonajes] = useState([]);
-    
-    //const url = "https://rickandmortyapi.com/api/character/?page=1";
 
     useEffect(() => {
         axios.get(props.url).then((response) =>{
             setPersonajes(response.data.results);
+            props.setPaginas(response.data.info.pages);
         });
     }, [props.url]);
     

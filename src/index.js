@@ -11,12 +11,13 @@ const App = () => {
   
   const [contador, setContador] = useState(1);
   const [nombre, setNombre] = useState("");
+  const [paginas, setPaginas] = useState(42);
 
 
   const [query, setQuery] = useState(url + "?page=" + contador.toString());
 
   function cambioPagina(){
-    if(contador < 42){
+    if(contador < paginas){
       setContador(contador+1);
     }
   }
@@ -29,6 +30,8 @@ const App = () => {
 
   const onChange = (e) => {
     setNombre(e.target.value);
+    setQuery(url + "?name=" + e.target.value);
+    setContador(1);
   };
 
   const onSubmit = (e) => {
@@ -37,7 +40,12 @@ const App = () => {
   };
 
   useEffect(() => {
-    setQuery(url + "?page=" + contador.toString());
+    if(nombre == ""){
+      setQuery(url + "?page=" + contador.toString());
+    }
+    else{
+      setQuery(url + "?name=" + nombre + "&page=" + contador.toString());
+    }
   }, [contador]);
 
 
@@ -58,7 +66,6 @@ const App = () => {
               value={nombre}
               onChange={onChange}>
           </input>
-          <button>Buscar</button>
         </div>
       </form>
       
@@ -76,7 +83,7 @@ const App = () => {
       ):(
         <></>
       )}
-      {contador < 42 ? (
+      {contador < paginas ? (
         <button
           onClick={cambioPagina}
           disabled = {contador === 42}
@@ -90,7 +97,7 @@ const App = () => {
         <></>
       )}
 
-      <Personajes url={query}/>
+      <Personajes url={query} setPaginas={setPaginas}/>
     </div>
     </>
   );
